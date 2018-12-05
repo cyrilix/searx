@@ -1,36 +1,16 @@
-sudo: false
-cache:
-  - pip
-  - npm
-  - directories:
-    - $HOME/.cache/pip
-addons:
-  firefox: "latest"
-language: python
-python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-install:
-  - ./manage.sh install_geckodriver ~/drivers
-  - export PATH=~/drivers:$PATH
-  - ./manage.sh npm_packages
-  - ./manage.sh update_dev_packages
-  - pip install codecov
+env:
+  matrix:
+    secure: hG//9LK7hV0Q2ZC3wjS1ZZKILKU744sIaWwA8reo2V2YKn8pYdAQAWKYlB9jvqTwRdVNfZJv7KQQFJ1RQLB2Ija4dqSg9BBGraPuuJxzrxH98BDfbh8wGGAqZr1cradHl0xWBMnPvCE4dxUkYpbjnXbZaDl+awi+oW4NNlltADnGJTGfc9qnTjA3kFIqJJTcFJtNhTR+1FGXvbtXK2RJZCQ+elV3/LhJ+qr/Na5jnM3kjsE82DevRvoJyaq+khEukJJBcx2mSt+K7yuulV7h0DZ8vhfpxKerJyAPrYUk0J5Ylt89fgFirVus1OTtV+4fnyfOQSgJlRg5INW3XrJ+IkG98yViWf58aaABqf3BHu+mnAwMlZ3H/1qhCD8AJRAMmt50n16ze2bRy5Mk9WI42ccyfO0SaZHamQIKtj2ZFxw5e21BWFd7vm+WvVNUn48xJu1KyuMemVggcmNmVXKZIMpV4gGypQ+RygwsAgUaPOMmvbwpLLZanWR23NaIR0ayk+2Rr0SOUIX8OJvg2U7njIdFtdRuMeUR+qbhx7yMIxxUuGgAnZUaT6707KchS67q1hw+HH/auL7qdxfacJhxMSKePwJqUF6dwdV3gMe6De8wUtGNaHXy5kd6P5HGDKDjbMkUj2rOAhYlJ9G3d4ftLMl9UbpDla/tBymTOssFaUA=
+
+sudo: required
+services:
+  - docker
+language: bash
 script:
-  - ./manage.sh styles
-  - ./manage.sh grunt_build
-  - ./manage.sh tests
-after_success:
-  - ./manage.sh py_test_coverage
-  - codecov
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#searx"
-    template:
-      - "%{repository}/#%{build_number}/%{branch} (%{author}): %{message} %{build_url}"
-    on_success: change
+  # prepare qemu
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - for target_arch in aarch64 arm x86_64; do wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.9.1-1/x86_64_qemu-${target_arch}-static.tar.gz; tar -xvf x86_64_qemu-${target_arch}-static.tar.gz; done
+
+  # build image
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - travis_wait 40 make publish

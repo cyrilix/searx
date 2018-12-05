@@ -7,6 +7,8 @@ EXPOSE 8888
 WORKDIR /usr/local/searx
 CMD ["/sbin/tini","--","/usr/local/searx/run.sh"]
 
+COPY qemu-arm-static /usr/bin/
+
 RUN adduser -D -h /usr/local/searx -s /bin/sh searx searx \
  && echo '#!/bin/sh' >> run.sh \
  && echo 'sed -i "s|base_url : False|base_url : $BASE_URL|g" searx/settings.yml' >> run.sh \
