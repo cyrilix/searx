@@ -13,4 +13,7 @@ script:
 
   # build image
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - travis_wait 40 make publish
+  - bash -c "while [ '1' == '1' ] ; do sleep 60; echo waiting; done" &
+  - make tag
+  - make push
+  - make manifest

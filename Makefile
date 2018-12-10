@@ -29,20 +29,20 @@ push: tag
 .PHONY: manifest
 manifest:
 	@echo "Create manifest for the version tag"
-	docker -D manifest create "${IMG_NAME}:${VERSION}" \
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest create "${IMG_NAME}:${VERSION}" \
 		"${IMG_NAME}:amd64-${VERSION}" \
 		"${IMG_NAME}:arm-${VERSION}"
 	# Set the architecture to ARM for the ARM image
-	docker -D manifest annotate "${IMG_NAME}:${VERSION}" "${IMG_NAME}:arm-${VERSION}" --os=linux --arch=arm --variant=v6
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest annotate "${IMG_NAME}:${VERSION}" "${IMG_NAME}:arm-${VERSION}" --os=linux --arch=arm --variant=v6
 	# Push the manifest
-	docker -D manifest push "${IMG_NAME}:${VERSION}"
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest push "${IMG_NAME}:${VERSION}"
 
     # Repeat for the latest tag
-	docker -D manifest create "${IMG_NAME}:latest" \
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest create "${IMG_NAME}:latest" \
 		"${IMG_NAME}:amd64-latest" \
 		"${IMG_NAME}:arm-latest"
-	docker -D manifest annotate "${IMG_NAME}:latest" "${IMG_NAME}:arm-latest" --os=linux --arch=arm --variant=v6
-	docker -D manifest push "${IMG_NAME}:latest"
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest annotate "${IMG_NAME}:latest" "${IMG_NAME}:arm-latest" --os=linux --arch=arm --variant=v6
+	DOCKER_CLI_EXPERIMENTAL=enabled docker -D manifest push "${IMG_NAME}:latest"
 
 register-arch:
 	@echo "Register architecture"
