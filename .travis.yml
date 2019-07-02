@@ -5,6 +5,7 @@ env:
 sudo: required
 services:
   - docker
+dist: xenial
 language: bash
 script:
   # prepare qemu
