@@ -50,4 +50,4 @@ WORKDIR /usr/local/searx
 
 EXPOSE 8888
 
-ENTRYPOINT ["run.sh"]
+ENTRYPOINT ["/usr/local/bin/run.sh"]
