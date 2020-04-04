@@ -4,6 +4,7 @@ LABEL maintainer="Cyrille Nofficial<cynoffic@cyrilix.fr>"
 ARG VERSION="v0.16.0"
 
 ENV BASE_URL=False IMAGE_PROXY=False
+ENV SECRET_KEY=""
 
 RUN apk -U upgrade \
  && apk add -t build-dependencies \
