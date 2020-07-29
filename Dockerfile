@@ -1,7 +1,7 @@
 FROM alpine:3.10
 LABEL maintainer="Cyrille Nofficial<cynoffic@cyrilix.fr>"
 
-ARG VERSION="v0.16.0"
+ARG VERSION="v0.17.0"
 
 ENV BASE_URL=False IMAGE_PROXY=False
 ENV SECRET_KEY=""
